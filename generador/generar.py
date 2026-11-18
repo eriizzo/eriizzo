@@ -37,7 +37,7 @@ USUARIO = "eriizzo"
 #  CONTENIDO
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 CONTENIDO = {
-    "nombre": "Eric Pérez",
+    "nombre": "Erizo",
     "saludo": "Hola, soy",
     "lema": ("Sistemas, ", "ciberseguridad e IA", "."),  # la parte del medio lleva el brillo
     "capsula": [
@@ -47,7 +47,7 @@ CONTENIDO = {
     "linkedin": "https://www.linkedin.com/in/eriicperezz/",
     "instagram": "https://www.instagram.com/eriicpeerezz_/",
     "sobre_mi": [
-        "Tengo 21 años y me encanta la informática, sobre todo la <b>ciberseguridad</b> y la <b>inteligencia artificial</b>.",
+        "Me encanta la informática, sobre todo la <b>ciberseguridad</b> y la <b>inteligencia artificial</b>.",
         "Trabajo como <b>administrador de sistemas en Daumar</b> y estudio un <b>máster en ciberseguridad</b>.",
         "Soy técnico superior en <b>ASIR</b> y hablo castellano, catalán e inglés.",
     ],
@@ -81,16 +81,6 @@ CONTENIDO = {
             "etiqueta": "Ver código",
             "icono": "erizocoach",
             "luz": ("b", 0.90, 0.96),
-        },
-        {
-            "id": "videojuegos",
-            "nombre": "Videojuegos web",
-            "texto": "Plataforma en PHP (MVC) sobre LAMP y Docker, preparada para auditarla.",
-            "chips": ["PHP", "Docker", "MariaDB", "Ciberseguridad"],
-            "enlace": f"https://github.com/{USUARIO}/Ciber-Produccio-Projecte04",
-            "etiqueta": "Ver código",
-            "icono": "escudo",
-            "luz": ("a", 0.10, 0.98),
         },
     ],
     "tecnologias": [
@@ -727,8 +717,9 @@ def readme() -> Path:
         return (f'<a href="{pr["enlace"]}">'
                 + imagen(f'proyecto-{pr["id"]}', f'{pr["nombre"]}: {pr["texto"]}', 'width="49%"') + "</a>")
 
-    # Las cuatro en un solo párrafo: al 49 % caben dos por línea y el hueco entre filas queda igual
-    # que el de entre columnas (con un párrafo por fila, el margen del párrafo lo doblaba).
+    # Todas en un solo párrafo centrado: al 49 % caben dos por línea, el hueco entre filas queda igual
+    # que el de entre columnas (con un párrafo por fila, el margen del párrafo lo doblaba) y, si son
+    # impares, la última queda centrada.
     filas = '<p align="center">\n  ' + "\n  ".join(tarjeta_html(pr) for pr in p) + "\n</p>"
     raw = f"https://raw.githubusercontent.com/{USUARIO}/{USUARIO}/output"
     lema = "".join(C["lema"])
@@ -782,6 +773,10 @@ def main() -> None:
         hechos.append(boton(tema, "linkedin"))
         hechos.append(boton(tema, "instagram"))
     hechos.append(readme())
+    # Lo que ya no sale (un proyecto quitado de CONTENIDO, por ejemplo) se borra de assets/.
+    for viejo in set(ASSETS.glob("*.svg")) - set(hechos):
+        viejo.unlink()
+        print(f"   borrado  {viejo.relative_to(REPO)}")
     for h in hechos:
         print(f"{h.stat().st_size / 1024:6.1f} KB  {h.relative_to(REPO)}")
 
